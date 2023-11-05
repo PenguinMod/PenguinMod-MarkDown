@@ -329,6 +329,50 @@ class Lexer {
         continue
       }
 
+      // link
+      if ((cap = this.rules.link.exec(src))) {
+        // Top-level should never reach here.
+        src = src.substring(cap[0].length)
+        this.tokens.push({
+          type: 'link',
+          url: cap[0]
+        })
+        continue
+      }
+
+      // project mention
+      if ((cap = this.rules.project.exec(src))) {
+        // Top-level should never reach here.
+        src = src.substring(cap[0].length)
+        this.tokens.push({
+          type: 'project',
+          id: cap[1]
+        })
+        continue
+      }
+
+      // user mention
+      if ((cap = this.rules.user.exec(src))) {
+        // Top-level should never reach here.
+        src = src.substring(cap[0].length)
+        this.tokens.push({
+          type: 'user',
+          name: cap[1]
+        })
+        continue
+      }
+
+      // emoji
+      if ((cap = this.rules.emoji.exec(src))) {
+        // Top-level should never reach here.
+        src = src.substring(cap[0].length)
+        this.tokens.push({
+          type: 'emoji',
+          name: cap[1]
+        })
+        continue
+      }
+
       if (src) {
         throw new Error('Infinite loop on byte: ' + src.charCodeAt(0))
       }

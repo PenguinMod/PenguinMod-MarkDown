@@ -14,7 +14,11 @@ const block = {
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: noop,
   paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
-  text: /^[^\n]+/
+  text: /^[^\n]+/,
+  link: /(https?:\/\/[\w\d_\-.]{1,256}(?:\/(?:\S*[\w:/#[\]@$&'()*+=])?)?(?![^?!,:;\w\s]\S))/,
+  project: /#([\w-]+)/,
+  user: /@([\w-]+)/,
+  emoji: /:(\w+):/
 }
 
 block.bullet = /(?:[*+-]|\d+\.)/

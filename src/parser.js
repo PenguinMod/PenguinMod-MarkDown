@@ -28,9 +28,9 @@ export default class Parser {
     this.inline = new InlineLexer(src.links, this.options, this.renderer)
     this.tokens = src.reverse()
 
-    let out = ''
+    let out = []
     while (this.next()) {
-      out += this.tok()
+      out.push(this.tok())
     }
 
     // Remove cached headings
@@ -138,7 +138,7 @@ export default class Parser {
         return this.renderer.blockquote(body)
       }
       case 'list_start': {
-        let body = ''
+        let body = []
         let taskList = false
         const ordered = this.token.ordered
 
@@ -146,27 +146,27 @@ export default class Parser {
           if (this.token.checked !== undefined) {
             taskList = true
           }
-          body += this.tok()
+          body.push(this.tok())
         }
 
         return this.renderer.list(body, ordered, taskList)
       }
       case 'list_item_start': {
-        let body = ''
+        let body = []
         const checked = this.token.checked
 
         while (this.next().type !== 'list_item_end') {
-          body += this.token.type === 'text' ? this.parseText() : this.tok()
+          body.push(this.token.type === 'text' ? this.parseText() : this.tok())
         }
 
         return this.renderer.listitem(body, checked)
       }
       case 'loose_item_start': {
-        let body = ''
+        let body = []
         const checked = this.token.checked
 
         while (this.next().type !== 'list_item_end') {
-          body += this.tok()
+          body.push(this.tok())
         }
 
         return this.renderer.listitem(body, checked)
@@ -183,6 +183,18 @@ export default class Parser {
       }
       case 'text': {
         return this.renderer.paragraph(this.parseText())
+      }
+      case 'link': {
+        return this.renderer.link(this.token.url)
+      }
+      case 'project': {
+        return this.renderer.project(this.token.id)
+      }
+      case 'user': {
+        return this.renderer.mention(this.token.name)
+      }
+      case 'emoji': {
+        return this.renderer.emoji(this.token.name)
       }
       default: {
         throw new Error('Unknow type')
