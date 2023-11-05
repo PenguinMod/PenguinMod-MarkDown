@@ -6,9 +6,7 @@
     "url": "egoist/md",
     "type": "git"
   },
-  "main": "dist/md.cjs.js",
-  "unpkg": "dist/md.js",
-  "module": "dist/md.es.js",
+  "main": "src/index.js",
   "files": [
     "dist"
   ],
