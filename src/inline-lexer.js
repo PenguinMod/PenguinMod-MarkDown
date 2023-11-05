@@ -32,7 +32,7 @@ class InlineLexer {
   }
 
   output(src) {
-    let out = ''
+    let out = []
     let link
     let text
     let href
@@ -42,7 +42,7 @@ class InlineLexer {
       // escape
       if ((cap = this.rules.escape.exec(src))) {
         src = src.substring(cap[0].length)
-        out += cap[1]
+        out.push(cap[1])
         continue
       }
 
@@ -59,7 +59,7 @@ class InlineLexer {
           text = escape(cap[1])
           href = text
         }
-        out += this.renderer.link(href, null, text)
+        out.push(this.renderer.link(href, null, text))
         continue
       }
 
@@ -68,7 +68,7 @@ class InlineLexer {
         src = src.substring(cap[0].length)
         text = escape(cap[1])
         href = text
-        out += this.renderer.link(href, null, text)
+        out.push(this.renderer.link(href, null, text))
         continue
       }
 
@@ -80,11 +80,11 @@ class InlineLexer {
           this.inLink = false
         }
         src = src.substring(cap[0].length)
-        out += this.options.sanitize
+        out.push(this.options.sanitize
           ? this.options.sanitizer
             ? this.options.sanitizer(cap[0])
             : escape(cap[0])
-          : cap[0]
+          : cap[0])
         continue
       }
 
@@ -92,10 +92,10 @@ class InlineLexer {
       if ((cap = this.rules.link.exec(src))) {
         src = src.substring(cap[0].length)
         this.inLink = true
-        out += this.outputLink(cap, {
+        out.push(this.outputLink(cap, {
           href: cap[2],
           title: cap[3]
-        })
+        }))
         this.inLink = false
         continue
       }
@@ -109,12 +109,12 @@ class InlineLexer {
         link = (cap[2] || cap[1]).replace(/\s+/g, ' ')
         link = this.links[link.toLowerCase()]
         if (!link || !link.href) {
-          out += cap[0].charAt(0)
+          out.push(cap[0].charAt(0))
           src = cap[0].substring(1) + src
           continue
         }
         this.inLink = true
-        out += this.outputLink(cap, link)
+        out.push(this.outputLink(cap, link))
         this.inLink = false
         continue
       }
@@ -122,42 +122,66 @@ class InlineLexer {
       // strong
       if ((cap = this.rules.strong.exec(src))) {
         src = src.substring(cap[0].length)
-        out += this.renderer.strong(this.output(cap[2] || cap[1]))
+        out.push(this.renderer.strong(this.output(cap[2] || cap[1])))
         continue
       }
 
       // em
       if ((cap = this.rules.em.exec(src))) {
         src = src.substring(cap[0].length)
-        out += this.renderer.em(this.output(cap[2] || cap[1]))
+        out.push(this.renderer.em(this.output(cap[2] || cap[1])))
         continue
       }
 
       // code
       if ((cap = this.rules.code.exec(src))) {
         src = src.substring(cap[0].length)
-        out += this.renderer.codespan(escape(cap[2], true))
+        out.push(this.renderer.codespan(escape(cap[2], true)))
         continue
       }
 
       // br
       if ((cap = this.rules.br.exec(src))) {
         src = src.substring(cap[0].length)
-        out += this.renderer.br()
+        out.push(this.renderer.br())
         continue
       }
 
       // del (gfm)
       if ((cap = this.rules.del.exec(src))) {
         src = src.substring(cap[0].length)
-        out += this.renderer.del(this.output(cap[1]))
+        out.push(this.renderer.del(this.output(cap[1])))
+        continue
+      }
+
+      // project mention
+      if ((cap = this.rules.project.exec(src))) {
+        // Top-level should never reach here.
+        src = src.substring(cap[0].length)
+        out.push(this.renderer.project(cap[1]))
+        continue
+      }
+
+      // user mention
+      if ((cap = this.rules.user.exec(src))) {
+        // Top-level should never reach here.
+        src = src.substring(cap[0].length)
+        out.push(this.renderer.mention(cap[1]))
+        continue
+      }
+
+      // emoji
+      if ((cap = this.rules.emoji.exec(src))) {
+        // Top-level should never reach here.
+        src = src.substring(cap[0].length)
+        out.push(this.renderer.emoji(cap[1]))
         continue
       }
 
       // text
       if ((cap = this.rules.text.exec(src))) {
         src = src.substring(cap[0].length)
-        out += this.renderer.text(escape(this.smartypants(cap[0])))
+        out.push(this.renderer.text(escape(this.smartypants(cap[0]))))
         continue
       }
 

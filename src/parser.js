@@ -184,18 +184,6 @@ export default class Parser {
       case 'text': {
         return this.renderer.paragraph(this.parseText())
       }
-      case 'link': {
-        return this.renderer.link(this.token.url)
-      }
-      case 'project': {
-        return this.renderer.project(this.token.id)
-      }
-      case 'user': {
-        return this.renderer.mention(this.token.name)
-      }
-      case 'emoji': {
-        return this.renderer.emoji(this.token.name)
-      }
       default: {
         throw new Error('Unknow type')
       }
