@@ -7,9 +7,6 @@
     "type": "git"
   },
   "main": "src/index.js",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "test": "npm run lint && jest",
     "test:cov": "npm run lint && jest --coverage",
