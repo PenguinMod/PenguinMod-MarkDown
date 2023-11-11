@@ -20,11 +20,13 @@ noop.exec = noop
 
 function escape(html, encode) {
   return html
+    /*
     .replace(encode ? /&/g : /&(?!#?\w+;)/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
+    */
 }
 
 function unescape(html) {
