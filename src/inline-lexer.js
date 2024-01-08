@@ -178,6 +178,15 @@ class InlineLexer {
         continue
       }
 
+      // timestamp
+      if ((cap = this.rules.timestamp.exec(src))) timestamp: {
+        src = src.substring(cap[0].length)
+        const date = Date.parse(cap[1])
+        if (isNaN(date)) break timestamp;
+        out.push(this.renderer.timestamp(date, cap[3], cap[5]))
+        continue
+      }
+
       // text
       if ((cap = this.rules.text.exec(src))) {
         src = src.substring(cap[0].length)
