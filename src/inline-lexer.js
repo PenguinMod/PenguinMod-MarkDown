@@ -46,6 +46,15 @@ class InlineLexer {
         continue
       }
 
+      // timestamp
+      if ((cap = this.rules.timestamp.exec(src))) timestamp: {
+        src = src.substring(cap[0].length)
+        const date = Date.parse(cap[1])
+        if (isNaN(date)) break timestamp;
+        out.push(this.renderer.timestamp(date, cap[3], cap[5]))
+        continue
+      }
+
       // autolink
       if ((cap = this.rules.autolink.exec(src))) {
         src = src.substring(cap[0].length)
@@ -175,15 +184,6 @@ class InlineLexer {
         // Top-level should never reach here.
         src = src.substring(cap[0].length)
         out.push(this.renderer.emoji(cap[1]))
-        continue
-      }
-
-      // timestamp
-      if ((cap = this.rules.timestamp.exec(src))) timestamp: {
-        src = src.substring(cap[0].length)
-        const date = Date.parse(cap[1])
-        if (isNaN(date)) break timestamp;
-        out.push(this.renderer.timestamp(date, cap[3], cap[5]))
         continue
       }
 
