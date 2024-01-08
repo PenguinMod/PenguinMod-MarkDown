@@ -5,7 +5,7 @@ import { noop, merge, replace } from './utils'
  */
 
 const inline = {
-  escape: /^\\([\\`*{}[\]()#+\-.!_>])/,
+  escape: /^\\([\\`*{}[\]()#+\-.!_@>w<:])/,
   autolink: /^<([^ >]+(@|:\/)[^ >]+)>/,
   url: noop,
   tag: /^<!--[\s\S]*?-->|^<\/?\w+(?:"[^"]*"|'[^']*'|[^'">])*?>/,
